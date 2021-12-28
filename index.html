@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>Sandbox</title>
+</head>
+
+<body>
+    <br><br>
+    <div class="container">
+        <div class="jumbotron">
+            <h1 class="display-4">Sandbox Website</h1>
+            <p class="lead">This site is mostly used to host challenges.</p>
+            <img src="https://api.netlify.com/api/v1/badges/8e6cabe1-281b-464d-814c-584f8c743407/deploy-status"
+                alt="Netlify Badge">
+            <hr class="my-4">
+            <p>Testbed: <code>https://sandbox.pwnfunction.com/?html=&js=&css=</code> (can't be used to solve any
+                challenges)</p>
+            <button class="btn btn-sm btn-primary"
+                onclick="location='/?html=<input>&js=confirm`1`&css=*{color:red}'">Example</button>
+        </div>
+
+        <div id="code"></div>
+    </div>
+
+
+    <script>
+        let html = (new URL(location).searchParams.get('html') || '')
+        let js = (new URL(location).searchParams.get('js') || '')
+        let css = (new URL(location).searchParams.get('css') || '')
+
+        code.innerHTML = `<style>${css}</style>${html}`
+        eval(js)
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

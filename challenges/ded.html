@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap(4.4.0) -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-SI27wrMjH3ZZ89r4o+fGIJtnzkAnFs3E4qz9DIYioCQ5l9Rd/7UAa8DHcaL8jkWt" crossorigin="anonymous">
+    <!-- DOMPurify(2.0.8) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.0.8/purify.min.js"
+        integrity="sha256-XN23us8AUgOfh7IEF7k6wOzJj5Aacbymf1ImHJaTK94=" crossorigin="anonymous"></script>
+    <title>Ded | XSS Challenge</title>
+</head>
+
+<body>
+    <br><br>
+    <div class="container">
+        <h2>Ded</h2>
+        <hr>
+        <u><b>Rules</b></u>
+        <ul>
+            <li>Difficulty is <b>Medium</b>.</li>
+            <li>Pop an <code>alert(1337)</code> on <code>sandbox.pwnfunction.com</code>.</li>
+            <li>No user interaction.</li>
+            <li>Cannot use <code>https://sandbox.pwnfunction.com/?html=&js=&css=</code>.</li>
+            <li>Tested on <b>Chrome</b>.</li>
+            <li>Unintended solution? DM me <a target="_blank"
+                    href="https://twitter.com/messages/compose?recipient_id=1084132461133451264">@PwnFunction</a>.</li>
+        </ul>
+        <hr>
+        <div class="alert alert-warning" role="alert">
+            Challenge is over. If you have found an unintended solution, DM me <a target="_blank" class="alert-link"
+                href="https://twitter.com/messages/compose?recipient_id=1084132461133451264">@PwnFunction</a>.
+        </div>
+        <hr />
+        <br />
+
+        <div id="ded">
+            <button type="button" class="btn btn-lg btn-danger" data-toggle="popover" title="Hints" data-html="true"
+                data-content="<li>Anything different about this challenge?</li>
+                <li>Look Deeper!</li>">Lemme help you.</button>
+        </div>
+
+        <script>
+            /* Inputs */
+            let code = (new URL(location).searchParams.get('code')).replace(/script/ig, "_") || `<li><strike>ded</strike></li>`
+
+            let clean = DOMPurify.sanitize(code, { SAFE_FOR_JQUERY: true })
+            document.getElementById('ded').innerHTML += clean
+        </script>
+    </div>
+
+    <!-- Jquery(3.4.1), Popper(1.16.0), Bootstrap(4.4.0) -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/js/bootstrap.min.js"
+        integrity="sha384-3qaqj0lc6sV/qpzrc1N5DC6i1VRn/HyX4qdPaiEFbn54VjQBEU341pvjz7Dv3n6P"
+        crossorigin="anonymous"></script>
+
+    <script>
+        /* Extend Bootstrap Popover */
+        let whiteList = $.fn.tooltip.Constructor.Default.whiteList
+        whiteList.form = []
+
+        /* Popovers! */
+        $(function () {
+            $('[data-toggle="popover"]').popover('show')
+        })
+    </script>
+</body>
+
+</html>

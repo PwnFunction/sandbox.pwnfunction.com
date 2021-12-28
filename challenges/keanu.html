@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XSS challenge</title>
+    <!-- Bootstrap(4.4.1) -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+
+<body>
+    <br><br>
+    <div class="container">
+        <h2>Keanu</h2>
+        <hr>
+        <u><b>Rules</b></u>
+        <ul>
+            <li>Difficulty is <b>Medium</b>.</li>
+            <li>Pop an <code>alert(1337)</code> on <code>sandbox.pwnfunction.com</code>.</li>
+            <li>No user interaction.</li>
+            <li>Cannot use <code>https://sandbox.pwnfunction.com/?html=&js=&css=</code>.</li>
+            <li>Tested on <b>Chrome</b>.</li>
+            <li>Unintended solution? DM me <a target="_blank"
+                    href="https://twitter.com/messages/compose?recipient_id=1084132461133451264">@PwnFunction</a>.</li>
+        </ul>
+        <hr />
+        <div class="alert alert-warning" role="alert">
+            Challenge is over. If you have found an unintended solution, DM me <a target="_blank" class="alert-link"
+                href="https://twitter.com/messages/compose?recipient_id=1084132461133451264">@PwnFunction</a>.
+        </div>
+        <hr />
+
+        <!-- Challenge -->
+        <number id="number" style="display:none"></number>
+
+        <div class="alert alert-primary" role="alert" id="welcome"></div>
+        <button id="keanu" class="btn btn-primary btn-sm" data-toggle="popover" data-content="DM @PwnFunction"
+            data-trigger="hover" onclick="alert(`If you solved it, DM me @PwnFunction :)`)">Solved it?</button>
+    </div>
+
+    <!-- DOMPurify(2.0.7) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.0.7/purify.min.js"
+        integrity="sha256-iO9yO1Iy0P2hJNUeAvUQR2ielSsGJ4rOvK+EQUXxb6E=" crossorigin="anonymous"></script>
+    <!-- Jquery(3.4.1), Popper(1.16.0), Bootstrap(4.4.1) -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+
+    <script>
+        /* Input */
+        var number = (new URL(location).searchParams.get('number') || "7")[0],
+            name = DOMPurify.sanitize(new URL(location).searchParams.get('name'), { SAFE_FOR_JQUERY: true });
+        $('number#number').html(number);
+        document.getElementById('welcome').innerHTML = (`Welcome <b>${name || "Mr. Wick"}!</b>`);
+
+        /* Greet */
+        $('#keanu').popover('show')
+        setTimeout(_ => {
+            $('#keanu').popover('hide')
+        }, 2000)
+
+        /* Check Magic Number */
+        var magicNumber = Math.floor(Math.random() * 10);
+        var number = eval($('number#number').html());
+        if (magicNumber === number) {
+            alert("You're Breathtaking!")
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap(4.4.1) -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>Me and the Bois | XSS Challenge</title>
+    <!-- DOMPurify(2.0.7) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.0.7/purify.min.js"
+        integrity="sha256-iO9yO1Iy0P2hJNUeAvUQR2ielSsGJ4rOvK+EQUXxb6E=" crossorigin="anonymous"></script>
+
+    <!-- Space Mono Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <br><br>
+    <div class="container">
+        <h2>Me and the Bois</h2>
+        <hr>
+        <u><b>Rules</b></u>
+        <ul>
+            <li>Difficulty is <b>Medium</b>.</li>
+            <li>Pop an <code>alert(1337)</code> on <code>sandbox.pwnfunction.com</code>.</li>
+            <li>No user interaction.</li>
+            <li>Cannot use <code>https://sandbox.pwnfunction.com/?html=&js=&css=</code>.</li>
+            <li>Tested on <b>Chrome</b>.</li>
+            <li>Unintended solution? DM me <a target="_blank"
+                    href="https://twitter.com/messages/compose?recipient_id=1084132461133451264">@PwnFunction</a>.</li>
+        </ul>
+        <hr />
+        <div class="alert alert-warning" role="alert">
+            Challenge is over. If you have found an unintended solution, DM me <a target="_blank" class="alert-link"
+                href="https://twitter.com/messages/compose?recipient_id=1084132461133451264">@PwnFunction</a>.
+        </div>
+        <hr />
+        <u><b>Me and the Bois</b></u>
+        <ul>
+            <li><a
+                    href="/challenges/me-and-the-bois.html?boi=Pwn(✨)&custom=%7B%22color%22%3A%22%230ff%22%2C%22backgroundColor%22%3A%22%23282a3a%22%2C%22textShadow%22%3A%223px%203px%200%20%23ff4473%22%7D">PwnFunction</a>
+            </li>
+            <li><a
+                    href="/challenges/me-and-the-bois.html?boi=%F0%9F%94%B4+LiveOverflow&custom=%7B%22color%22%3A%22black%22%2C%22backgroundColor%22%3A%22%23fff%22%2C%22border%22%3A%223px%20solid%20%23dedede%22%7D">LiveOverflow</a>
+            </li>
+            <li><a
+                    href="/challenges/me-and-the-bois.html?boi=JohnHammond&custom=%7B%22color%22%3A%22black%22%2C%22textShadow%22%3A%222px%202px%200%20%23fff%2C%202px%20-2px%200%20%23fff%2C%20-2px%202px%200%20%23fff%2C%20-2px%20-2px%200%20%23fff%2C%202px%200px%200%20%23fff%2C%200px%202px%200%20%23fff%2C%20-2px%200px%200%20%23fff%2C%200px%20-2px%200%20%23fff%22%2C%22backgroundColor%22%3A%22black%22%7D">JohnHammond</a>
+            </li>
+            <li><a
+                    href="/challenges/me-and-the-bois.html?boi=Gynvael+%F0%9F%98%B8&custom=%7B%22color%22%3A%22%23fff%22%2C%22background%22%3A%22linear-gradient%2890deg%2C%20rgba%2896%2C96%2C160%2C1%29%200%25%2C%20rgba%2862%2C61%2C118%2C1%29%20100%25%29%22%7D">Gynvael</a>
+            </li>
+        </ul>
+        <br>
+
+        <!-- Challenge -->
+        <div id="bois">
+        </div>
+
+        <script>
+            /* Variables */
+            let safeTags = ['a', 'area', 'b', 'br', 'col', 'code', 'div', 'em', 'hr', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'i', 'iframe', 'img', 'li', 'ol', 'p', 'pre', 's', 'small', 'span', 'sub', 'sup', 'strong', 'u', 'ul']
+            let forbiddenAttrs = ['style', 'srcdoc']
+            let cssSafe = /[^a-zA-Z0-9\s\-\,\:\_\(\)\{\}\"\'\.\#\;\%]/g
+
+            /* Inputs */
+            let boi = `<h1>${(new URL(location).searchParams.get('boi')) || 'Neo'}</h1>`
+            let clean = DOMPurify.sanitize(boi, { ALLOWED_TAGS: safeTags, FORBID_ATTR: forbiddenAttrs })
+            let bois = document.getElementById('bois')
+            bois.innerHTML += clean;
+
+            /* Custom Style JSON */
+            let custom = (new URL(location).searchParams.get('custom')) || ""
+            custom = custom.replace(cssSafe, '')
+            if (custom) {
+                customStyles = JSON.parse(custom)
+                let comment = document.createComment(customStyles)
+                bois.appendChild(comment)
+            }
+
+            /* Configuration */
+            window.CONFIG = {
+                color: "lime",
+                backgroundColor: "#000"
+            }
+        </script>
+
+        <script>
+            /* Generic Style Setter */
+            function styleSetter(styles, execStr) {
+                for (var style in styles) {
+                    if (styles.hasOwnProperty(style)) {
+                        eval(execStr)
+                    }
+                }
+            }
+
+            /* Default Styles */
+            window.DEFAULTS = {
+                borderRadius: "5px",
+                fontFamily: "Space Mono",
+                fontWeight: "700",
+                letterSpacing: "4px",
+                padding: "20px",
+                textAlign: "center",
+                width: "500px"
+            }
+            styleSetter(DEFAULTS, `CONFIG[style] = styles[style]`)
+
+            /* Custom Styles */
+            if (window.customStyles) {
+                styleSetter(customStyles, `CONFIG[style] = customStyles[style]`)
+            }
+
+            /* Stylise! */
+            styleSetter(CONFIG, `bois.firstElementChild.style[style] = CONFIG[style]`)
+        </script>
+    </div>
+
+    <!-- Jquery(3.4.1), Popper(1.16.0), Bootstrap(4.4.1) -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

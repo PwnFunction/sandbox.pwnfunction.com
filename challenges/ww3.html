@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap(4.4.1) -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>WW3 | XSS Challenge</title>
+    <!-- Custom Styles -->
+    <style>
+        img.circle {
+            border-radius: 50%;
+            width: 35px;
+            margin-right: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <br><br>
+    <div class="container">
+        <h2>World War 3</h2>
+        <hr>
+        <u><b>Rules</b></u>
+        <ul>
+            <li>Difficulty is <b>Hard</b>.</li>
+            <li>Pop an <code>alert(1337)</code> on <code>sandbox.pwnfunction.com</code>.</li>
+            <li>No user interaction.</li>
+            <li>Cannot use <code>https://sandbox.pwnfunction.com/?html=&js=&css=</code>.</li>
+            <li>Tested on <b>Chrome</b>.</li>
+            <li>Unintended solution? DM me <a target="_blank"
+                    href="https://twitter.com/messages/compose?recipient_id=1084132461133451264">@PwnFunction</a>.</li>
+        </ul>
+        <hr>
+        <div class="alert alert-warning" role="alert">
+            Challenge is over. If you have found an unintended solution, DM me <a target="_blank" class="alert-link"
+                href="https://twitter.com/messages/compose?recipient_id=1084132461133451264">@PwnFunction</a>.
+        </div>
+        <hr />
+
+        <!-- Challenge -->
+        <div>
+            <h4>Meme Code</h4>
+            <textarea class="form-control" id="meme-code" rows="4"></textarea>
+            <br>
+            <div id="notify"></div>
+        </div>
+
+        <!-- DOMPurify(2.0.7) -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.0.7/purify.min.js"
+            integrity="sha256-iO9yO1Iy0P2hJNUeAvUQR2ielSsGJ4rOvK+EQUXxb6E=" crossorigin="anonymous"></script>
+        <!-- Jquery(3.4.1), Popper(1.16.0), Bootstrap(4.4.1) -->
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+            crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
+
+        <script>
+            /* Utils */
+            const escape = (dirty) => unescape(dirty).replace(/[<>'"=]/g, '');
+
+            const memeTemplate = (img, text) => {
+                return (`<style>@import url('https://fonts.googleapis.com/css?family=Oswald:700&display=swap');.meme-card{margin:0 auto;width:300px}.meme-card>img{width:300px}.meme-card>h1{text-align:center;color:#fff;background:black;margin-top:-5px;position:relative;font-family:Oswald,sans-serif;font-weight:700}</style><div class="meme-card"><img src="${img}"><h1>${text}</h1></div>`)
+            }
+
+            const memeGen = (that, notify) => {
+                if (text && img) {
+                    template = memeTemplate(img, text)
+
+                    if (notify) {
+                        html = (`<div class="alert alert-warning" role="alert"><b>Meme</b> created from ${DOMPurify.sanitize(text)}</div>`)
+                    }
+
+                    setTimeout(_ => {
+                        $('#status').remove()
+                        notify ? ($('#notify').html(html)) : ''
+                        $('#meme-code').text(template)
+                    }, 1000)
+                }
+            }
+        </script>
+
+        <script>
+            /* Main */
+            let notify = false;
+
+            let text = new URL(location).searchParams.get('text')
+            let img = new URL(location).searchParams.get('img')
+
+            if (text && img) {
+                document.write(
+                    `<div class="alert alert-primary" role="alert" id="status"><img class="circle" src="${escape(img)}" onload="memeGen(this, notify)">Creating meme... (${DOMPurify.sanitize(text)})</div>`
+                )
+            } else {
+                $('#meme-code').text(memeTemplate('https://i.imgur.com/PdbDexI.jpg', 'When you get that WW3 draft letter'))
+            }
+        </script>
+    </div>
+</body>
+
+</html>
